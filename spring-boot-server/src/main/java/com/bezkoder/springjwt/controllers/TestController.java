@@ -15,10 +15,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.bezkoder.springjwt.models.Account;
+import com.bezkoder.springjwt.models.DebitOrder;
 import com.bezkoder.springjwt.models.HomeLoan;
 import com.bezkoder.springjwt.models.Loan;
 
 import com.bezkoder.springjwt.repository.HomeLoanRepository;
+import com.bezkoder.springjwt.security.services.AccountService;
+import com.bezkoder.springjwt.security.services.DebitOrderService;
 import com.bezkoder.springjwt.security.services.LoanService;
 
 
@@ -31,6 +35,10 @@ public class TestController {
 	 private LoanService loanservice;
 	@Autowired
 	private HomeLoanRepository homeloanrepository;
+	@Autowired
+	private AccountService accountservice;
+	@Autowired
+	private DebitOrderService dbsoervice;
 	
 	
 	
@@ -95,6 +103,53 @@ public class TestController {
 		    public List<HomeLoan> getloans(@PathVariable("username") String username){
 		        return loanservice.findAllHlonOfUser(username);
 		    }
+		    
+		    //Insert Account related to user
+		    @PutMapping("/addaccount/{username}/account")
+		    @CrossOrigin(origins = "http://localhost:4200")
+			@PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public ResponseEntity<Void> addAccountForUser(@PathVariable("username") String username, @RequestBody Account account){
+		    	accountservice.addAccountForUser(username,account);
+		    	 ResponseEntity<Void> re = new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+				 return re;
+		    }
+		    
+		    @GetMapping("/account/{username}")
+		    @CrossOrigin(origins = "http://localhost:4200")
+		    @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public List<Account> findAccountOfAUser(@PathVariable("username") String username){
+		    	return accountservice.findAccountOfAUser(username);
+		    }
+		    
+		    //DebitOrder Insert
+		    @PutMapping("/{recaccnumber}/debitorder/{senaccnumber}")
+		    @CrossOrigin(origins = "http://localhost:4200")
+			@PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public ResponseEntity<Void> debitorderToSpecificAccount(@PathVariable("recaccnumber") Long recaccnumber,@PathVariable("senaccnumber") Long senaccnumber,@RequestBody DebitOrder debitorder){
+		    	dbsoervice.addDebitOrderForAccount(recaccnumber,senaccnumber, debitorder);
+		    	 ResponseEntity<Void> re = new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+				 return re;
+		    }
+		    
+		    //display all debitorder transcations
+		    @GetMapping("/display/{accnumber}/debitorder")
+		    @CrossOrigin(origins = "http://localhost:4200")
+		    @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public List<DebitOrder> findRecievedTranscations(@PathVariable("accnumber") Long accnumber){
+		    	return dbsoervice.findAllTranscations(accnumber);
+		    }
+		    
+//		    @GetMapping("/display/{sendaccnumber}/debitorder")
+//		    @CrossOrigin(origins = "http://localhost:4200")
+//		    @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+//		    public List<DebitOrder> findAllTranscations(@PathVariable("sendaccnumber") Long sendaccnumber){
+//		    	return dbsoervice.findSendTranscations(sendaccnumber);
+//		    }
+//		    
+		    
+		    
+		    
+		    
 		    
 //		    //Insert Wallet Data
 //		    @PutMapping("/wallet/{username}")

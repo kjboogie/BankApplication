@@ -34,6 +34,9 @@ public class User {
 	@NotBlank
 	@Size(max = 120)
 	private String password;
+	
+	@OneToMany(targetEntity = Account.class,cascade = CascadeType.ALL)
+	private List<Account> account;
 
 	@OneToMany(targetEntity = Loan.class,cascade = CascadeType.ALL)
 	private List<Loan> loan; 
@@ -41,6 +44,16 @@ public class User {
 	@OneToMany(targetEntity = HomeLoan.class,cascade = CascadeType.ALL)
 	public List<HomeLoan> hloan;
 
+    
+	
+	
+	public List<Account> getAccount() {
+		return account;
+	}
+
+	public void setAccount(List<Account> account) {
+		this.account = account;
+	}
 
 	public List<HomeLoan> getHloan() {
 		return hloan;
