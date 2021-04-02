@@ -44,9 +44,20 @@ public class User {
 	@OneToMany(targetEntity = HomeLoan.class,cascade = CascadeType.ALL)
 	public List<HomeLoan> hloan;
 
-    
+	@OneToMany(targetEntity = WalletAccount.class,cascade = CascadeType.ALL)
+    public List<WalletAccount> waccount;
 	
 	
+	
+	
+	public List<WalletAccount> getWaccount() {
+		return waccount;
+	}
+
+	public void setWaccount(List<WalletAccount> waccount) {
+		this.waccount = waccount;
+	}
+
 	public List<Account> getAccount() {
 		return account;
 	}

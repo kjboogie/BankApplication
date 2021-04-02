@@ -19,11 +19,13 @@ import com.bezkoder.springjwt.models.Account;
 import com.bezkoder.springjwt.models.DebitOrder;
 import com.bezkoder.springjwt.models.HomeLoan;
 import com.bezkoder.springjwt.models.Loan;
-
+import com.bezkoder.springjwt.models.WalletAccount;
+import com.bezkoder.springjwt.models.WalletTransactions;
 import com.bezkoder.springjwt.repository.HomeLoanRepository;
 import com.bezkoder.springjwt.security.services.AccountService;
 import com.bezkoder.springjwt.security.services.DebitOrderService;
 import com.bezkoder.springjwt.security.services.LoanService;
+import com.bezkoder.springjwt.security.services.WalletService;
 
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -39,6 +41,8 @@ public class TestController {
 	private AccountService accountservice;
 	@Autowired
 	private DebitOrderService dbsoervice;
+	@Autowired
+	private WalletService wservice;
 	
 	
 	
@@ -138,6 +142,38 @@ public class TestController {
 		    public List<DebitOrder> findRecievedTranscations(@PathVariable("accnumber") Long accnumber){
 		    	return dbsoervice.findAllTranscations(accnumber);
 		    }
+		    
+		    //Create Wallet of User
+		    @PutMapping("/addwallet/{username}/account")
+		    @CrossOrigin(origins = "http://localhost:4200")
+			@PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public ResponseEntity<Void> addWalletForUser(@PathVariable("username") String username, @RequestBody WalletAccount waccount){
+		    	wservice.addWalletForUser(username, waccount);
+		    	 ResponseEntity<Void> re = new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+				 return re;
+		    }
+		    
+		    //Display Wallet Data
+		    @GetMapping("/walletaccount/{username}")
+		    @CrossOrigin(origins = "http://localhost:4200")
+		    @PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public List<WalletAccount> findWalletAccountOfAUser(@PathVariable("username") String username){
+		    	return wservice.findWalletOfAUser(username);
+		    }
+		    
+		    
+
+		    //Wallet Transaction insert
+		    @PutMapping("/{fromaccountno}/walletaccount/{towalletaccountno}")
+		    @CrossOrigin(origins = "http://localhost:4200")
+			@PreAuthorize("hasRole('USER')  or hasRole('ADMIN')")
+		    public ResponseEntity<Void> insertWalletTransaction(@PathVariable("fromaccountno") Long fromaccountno,@PathVariable("towalletaccountno") Long towalletaccountno,@RequestBody WalletTransactions wallettransactions){
+		    	wservice.addTranscationOfWallet(fromaccountno, towalletaccountno, wallettransactions);
+		    	 ResponseEntity<Void> re = new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+				 return re;
+		    } 
+		    
+		    
 		    
 //		    @GetMapping("/display/{sendaccnumber}/debitorder")
 //		    @CrossOrigin(origins = "http://localhost:4200")

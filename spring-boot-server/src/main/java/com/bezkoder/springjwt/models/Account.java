@@ -76,11 +76,11 @@ public class Account {
 
 
 
-	public long getAccount_number() {
+	public long getAccountnumber() {
 		return accountnumber;
 	}
 
-	public void setAccount_number(long accountnumber) {
+	public void setAccountnumber(long accountnumber) {
 		this.accountnumber = accountnumber;
 	}
 

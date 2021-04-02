@@ -22,14 +22,26 @@ public class DebitOrderService{
 	@Autowired
 	private UserRepository userrepository;
 	
-	@Transactional
+   @Transactional
    public void addDebitOrderForAccount(Long recaccnumber,Long senaccnumber, DebitOrder db) {
-	   Account account = accountrepository.findByaccountnumber(recaccnumber);
-	   Account acc = accountrepository.findByaccountnumber(senaccnumber);
-	   Account acc = accountrepository.findOne(senaccnumber);			   
-	   List<DebitOrder> dbdborder = account.getDebitorder();
-	   dbdborder.add(db);
-	   account.setDebitorder(dbdborder);
+		Account account = accountrepository.findByaccountnumber(recaccnumber);
+		   Account acc = accountrepository.findByaccountnumber(senaccnumber);
+		   //add or update balance in account table
+		   int  recid = accountrepository.findIdByaccountnumber(recaccnumber);	
+		   int recbal = accountrepository.findbalanceById(recid);
+		   Account acctest = accountrepository.getOne(recid);
+		   Long newrecbal = recbal+ db.getMoney();
+		   acctest.setBalance(newrecbal);
+		   //subtract balance from senders account
+		   int  accid = accountrepository.findIdByaccountnumber(senaccnumber);	
+		   int senbal = accountrepository.findbalanceById(accid);
+		   Account acctest2 = accountrepository.getOne(accid);
+		   Long newsenbal = senbal - db.getMoney();
+		   acctest2.setBalance(newsenbal);
+		   
+		   List<DebitOrder> dbdborder = account.getDebitorder();
+		   dbdborder.add(db);
+		   account.setDebitorder(dbdborder);
    }
 	
 	
