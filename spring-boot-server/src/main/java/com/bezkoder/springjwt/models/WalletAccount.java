@@ -75,8 +75,9 @@ public class WalletAccount {
 	public Long getWbalance() {
 		return wbalance;
 	}
-	public void setWbalance(Long wbalance) {
-		this.wbalance = wbalance;
+	public Long setWbalance(Long wbalance) {
+		
+		return this.wbalance = wbalance;
 	}
 	public int getWid() {
 		return wid;

@@ -30,6 +30,8 @@ public class WalletService {
 	public void addWalletForUser(String username, WalletAccount wa) {
 		User user = userrepository.findByusername(username);
 		List<WalletAccount> waccount = user.getWaccount();
+		Long x = (long) 0;
+		wa.setWbalance(x);
 		waccount.add(wa);
 		user.setWaccount(waccount);
 	}
@@ -61,8 +63,7 @@ public class WalletService {
 		   List<WalletTransactions> wtransaction = acc.getWtransactions();
 		   wtransaction.add(wt);
 		   acc.setWtransactions(wtransaction);
-		   
-		   
+		      
 	 }
 	
 }
