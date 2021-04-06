@@ -20,6 +20,8 @@ public interface AccountRepository extends JpaRepository<Account, Integer>{
 	
 	@Query("SELECT r.balance FROM Account r where r.id = :id")
 	int findbalanceById(int id);
+
+	public Account findBycardnumber(Long cardnumber);
 	
 //	public Account findAllByaccountnumber(Long accountnumber);
 }

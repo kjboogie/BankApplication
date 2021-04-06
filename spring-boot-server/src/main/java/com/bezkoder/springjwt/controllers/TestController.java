@@ -16,14 +16,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.bezkoder.springjwt.models.Account;
+import com.bezkoder.springjwt.models.Creditcard;
 import com.bezkoder.springjwt.models.DebitOrder;
 import com.bezkoder.springjwt.models.HomeLoan;
+import com.bezkoder.springjwt.models.InsurancePolicy;
 import com.bezkoder.springjwt.models.Loan;
 import com.bezkoder.springjwt.models.WalletAccount;
 import com.bezkoder.springjwt.models.WalletTransactions;
 import com.bezkoder.springjwt.repository.HomeLoanRepository;
 import com.bezkoder.springjwt.security.services.AccountService;
+import com.bezkoder.springjwt.security.services.CreditcardService;
 import com.bezkoder.springjwt.security.services.DebitOrderService;
+import com.bezkoder.springjwt.security.services.InsurancePolicyService;
 import com.bezkoder.springjwt.security.services.LoanService;
 import com.bezkoder.springjwt.security.services.WalletService;
 
@@ -43,7 +47,10 @@ public class TestController {
 	private DebitOrderService dbsoervice;
 	@Autowired
 	private WalletService wservice;
-	
+	@Autowired
+	private CreditcardService creditcardservice;
+	@Autowired
+	private InsurancePolicyService ipservice;
 	
 	
 	@GetMapping("/all")
@@ -172,6 +179,42 @@ public class TestController {
 		    	 ResponseEntity<Void> re = new ResponseEntity<Void>(HttpStatus.ACCEPTED);
 				 return re;
 		    } 
+		    
+		  //add creditcard related data into db
+		    @PutMapping("/{cardnumber}/creditcard")
+		    @CrossOrigin(origins = "http://localhost:4200")
+		    public ResponseEntity<Void> addCreditCard(@PathVariable("cardnumber") Long cardnumber, @RequestBody Creditcard creditcard)
+		    {
+		    creditcardservice.addCreditCardForAccount(cardnumber,creditcard);
+		    ResponseEntity<Void> re=new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+		    return re;
+		    }
+		    
+		    
+		  //display debited Ammount
+		    @GetMapping("/getcard/{cardnumber}/amount")
+		    @CrossOrigin(origins = "http://localhost:4200")
+		    public List <Creditcard> getCreditCards(@PathVariable("cardnumber")Long cardnumber)
+		    {
+		    return creditcardservice.findAllTranscations1(cardnumber);
+		    }
+		    
+		    //add Insurance Policy
+		    @PutMapping("/{cardnumber}/addInsurancepolicy")
+	        @CrossOrigin(origins = "http://localhost:4200")
+	        public ResponseEntity<Void> addInsurancePolicy(@PathVariable("cardnumber") long cardnumber, @RequestBody InsurancePolicy policy)
+	        {
+		    	ipservice.addIpolicyForUser(cardnumber, policy);
+	             ResponseEntity<Void> re = new ResponseEntity<Void>(HttpStatus.ACCEPTED);
+	             return re;
+	        }
+	        
+	        //display Insurance Policy
+	        @GetMapping("/getinsurancepolicies/{cardnumber}/ipolicy")
+	        @CrossOrigin(origins = "http://localhost:4200")
+	         public List<InsurancePolicy> getpolicies(@PathVariable("cardnumber") long cardnumber){
+	            return ipservice.findAllIpolicyOfUser(cardnumber);
+	        }
 		    
 		    
 		    

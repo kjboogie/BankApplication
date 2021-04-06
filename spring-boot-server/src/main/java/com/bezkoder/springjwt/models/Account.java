@@ -19,7 +19,8 @@ import org.hibernate.annotations.DynamicUpdate;
 @DynamicUpdate
 @Table(	name = "accounts", 
 		uniqueConstraints = { 
-			@UniqueConstraint(columnNames = "accountnumber")
+			@UniqueConstraint(columnNames = "accountnumber"),
+			@UniqueConstraint(columnNames = "cardnumber")
 })
 public class Account {
 	
@@ -41,12 +42,44 @@ public class Account {
 	
 	private String accounttype; 
 	
+	private Long cardnumber; 
+	
 	@OneToMany(targetEntity = DebitOrder.class,cascade = CascadeType.ALL)
 	private List<DebitOrder> debitorder;
 	
+	@OneToMany(targetEntity = Creditcard.class,cascade = CascadeType.ALL)
+	private List<Creditcard> creditcard;
+	
+	@OneToMany(targetEntity = InsurancePolicy.class,cascade = CascadeType.ALL)
+	private List<InsurancePolicy> ipolicy;
 	
 	
 	
+	
+	public List<InsurancePolicy> getIpolicy() {
+		return ipolicy;
+	}
+
+
+
+	public void setIpolicy(List<InsurancePolicy> ipolicy) {
+		this.ipolicy = ipolicy;
+	}
+
+
+
+	public List<Creditcard> getCreditcard() {
+		return creditcard;
+	}
+
+
+
+	public void setCreditcard(List<Creditcard> creditcard) {
+		this.creditcard = creditcard;
+	}
+
+
+
 	public List<DebitOrder> getDebitorder() {
 		return debitorder;
 	}
@@ -65,14 +98,16 @@ public class Account {
 
 	
 
-	public Account(long accountnumber, int pin,String name, Long balance, String accounttype) {
+	public Account(long accountnumber, int pin,String name, Long balance, String accounttype,Long cardnumber) {
 		super();
 		this.accountnumber = accountnumber;
 		this.pin = pin;
 		this.name = name;
 		this.balance = balance;
 		this.accounttype = accounttype;
+		this.cardnumber=cardnumber;
 	}
+	
 
 
 
@@ -118,6 +153,18 @@ public class Account {
 
 	public void setAccounttype(String accounttype) {
 		this.accounttype = accounttype;
+	}
+
+
+
+	public Long getCardnumber() {
+		return cardnumber;
+	}
+
+
+
+	public void setCardnumber(Long cardnumber) {
+		this.cardnumber = cardnumber;
 	}
 	
 	
